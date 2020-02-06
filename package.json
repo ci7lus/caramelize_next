@@ -8,13 +8,16 @@
         "dev": "next",
         "build": "next build",
         "start": "next start",
-        "lint:prettier": "prettier --write './src/**/*.{js,ts,tsx,scss}'",
-        "format": "prettier --check './src/**/*.{js,ts,tsx,scss}'"
+        "format": "prettier --write './src/**/*.{html,css,scss,pcss,js,ts,tsx}'",
+        "lint:prettier": "prettier --check './src/**/*.{html,css,scss,pcss,js,ts,tsx}'"
     },
     "dependencies": {
+        "autoprefixer": "^9.7.4",
         "next": "^9.2.1",
+        "postcss-import": "^12.0.1",
         "react": "^16.12.0",
-        "react-dom": "^16.12.0"
+        "react-dom": "^16.12.0",
+        "tailwindcss": "^1.2.0"
     },
     "devDependencies": {
         "@types/node": "^13.7.0",
