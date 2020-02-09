@@ -1,13 +1,29 @@
-import { scrapboxProject, scrapboxBlogTag } from "../config"
+import { SCRAPBOX_PROJECT, SCRAPBOX_BLOG_TAG, ENABLE_CACHE, CACHE_PATH } from "../config"
 import fetch from "node-fetch"
 import { ScrapboxError, ScrapboxPage, Post, ScrapboxSearchResult } from "./types"
 import { parse } from "@progfay/scrapbox-parser"
 import querystring from "querystring"
 import moment from "moment"
 import "moment-timezone"
+import crypto from "crypto"
+import { readFile, writeFile, initCache, stat } from "../fsUtils"
 
 export const getPageMeta = async (projectName: string, pageName: string) => {
-    const res = await fetch(`https://scrapbox.io/api/pages/${projectName}/${encodeURIComponent(pageName)}`)
+    const url = `https://scrapbox.io/api/pages/${projectName}/${encodeURIComponent(pageName)}`
+    let hash: string = ""
+    let cachePath: string = ""
+    if (ENABLE_CACHE) {
+        hash = crypto
+            .createHash("sha256")
+            .update(url)
+            .digest("hex")
+        cachePath = `${CACHE_PATH}/${hash}`
+        try {
+            const body = await readFile(cachePath)
+            return JSON.parse(body.toString()) as ScrapboxPage
+        } catch (error) {}
+    }
+    const res = await fetch(url)
     if (res.status !== 200) {
         const body: ScrapboxError = await res.json()
         if (body.statusCode === 404) {
@@ -17,16 +33,23 @@ export const getPageMeta = async (projectName: string, pageName: string) => {
         }
     }
     const body: ScrapboxPage = await res.json()
+    if (ENABLE_CACHE) {
+        try {
+            await initCache()
+            await writeFile(cachePath, JSON.stringify(body))
+            console.log(cachePath, "cache generated")
+        } catch (error) {}
+    }
     return body
 }
 
 export const getPost = async (slug: string) => {
-    const meta = await getPageMeta(scrapboxProject, slug)
+    const meta = await getPageMeta(SCRAPBOX_PROJECT, slug)
     if (meta === null) {
         return null
     }
     const text = meta.lines.map(line => line.text).join(" \n")
-    if (!text.includes(scrapboxBlogTag)) {
+    if (!text.includes(SCRAPBOX_BLOG_TAG)) {
         return null
     }
     const parsed = parse(text)
@@ -48,26 +71,48 @@ export const getPost = async (slug: string) => {
     return data
 }
 
+export const getPostsMaster = async (skip: number, limit: number, sort: "updated", q: string) => {
+    const cachePath = `${CACHE_PATH}/master`
+    if (ENABLE_CACHE) {
+        try {
+            const statOf = await stat(cachePath)
+            if (1 <= moment(statOf.birthtime).diff(1, "days")) {
+                const body = await readFile(cachePath)
+                return JSON.parse(body.toString()) as ScrapboxSearchResult
+            }
+        } catch (error) {}
+    }
+    const qs = querystring.stringify({
+        skip,
+        limit,
+        sort,
+        q,
+    })
+
+    let url: string = `https://scrapbox.io/api/pages/${SCRAPBOX_PROJECT}/search/query?${qs}`
+
+    const res = await fetch(url)
+    if (res.status !== 200) {
+        const body: ScrapboxError = await res.json()
+        throw new Error(res.status.toString())
+    }
+    const body: ScrapboxSearchResult = await res.json()
+    if (ENABLE_CACHE) {
+        try {
+            await initCache()
+            await writeFile(cachePath, JSON.stringify(body))
+            console.log(cachePath, "cache generated")
+        } catch (error) {}
+    }
+    return body
+}
+
 export const getPosts = async (query: string, page: number = 0, limit: number = 10) => {
     // 現時点で skip が無視されてしまうので擬似的な　skip の実装
     if (100 < page * limit) {
         return []
     }
-    const qs = querystring.stringify({
-        skip: 0,
-        limit: 100, // すみません
-        sort: "updated",
-        q: query,
-    })
-
-    let url: string = `https://scrapbox.io/api/pages/${scrapboxProject}/search/query?${qs}`
-
-    const res = await fetch(url)
-    if (res.status !== 200) {
-        const body: ScrapboxError = await res.json()
-        throw new Error(body.statusCode.toString())
-    }
-    const body: ScrapboxSearchResult = await res.json()
+    const body = await getPostsMaster(0, 100, "updated", query)
 
     if (body.count < page * limit) {
         return []

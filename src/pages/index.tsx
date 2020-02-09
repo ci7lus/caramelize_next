@@ -3,7 +3,7 @@ import Link from "next/link"
 import ErrorPage from "next/error"
 import { getPosts } from "../../lib/scrapbox/api"
 import { Post } from "../../lib/scrapbox/types"
-import { scrapboxBlogTag } from "../../lib/config"
+import { SCRAPBOX_BLOG_TAG } from "../../lib/config"
 import { Header } from "../components/header"
 import { formatString } from "../constants"
 import dayjs from "dayjs"
@@ -13,7 +13,7 @@ import { faHistory } from "@fortawesome/free-solid-svg-icons/faHistory"
 
 export const unstable_getStaticProps = async () => {
     const page = 0
-    const posts = await getPosts(scrapboxBlogTag)
+    const posts = await getPosts(SCRAPBOX_BLOG_TAG)
 
     return {
         props: {

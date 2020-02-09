@@ -1,6 +1,6 @@
 import Index from "./index"
 import { getPosts } from "../../lib/scrapbox/api"
-import { scrapboxBlogTag } from "../../lib/config"
+import { SCRAPBOX_BLOG_TAG } from "../../lib/config"
 
 export const unstable_getStaticProps = async ({ params: { slug } }: { params: { slug: string } }) => {
     let page = 0
@@ -9,7 +9,7 @@ export const unstable_getStaticProps = async ({ params: { slug } }: { params: { 
     if (!Number.isNaN(parsed) && slug.startsWith("p")) {
         page = parsed
 
-        const posts = await getPosts(scrapboxBlogTag, page)
+        const posts = await getPosts(SCRAPBOX_BLOG_TAG, page)
 
         return {
             props: { posts, page },

@@ -4,7 +4,7 @@ import { getPost } from "../../../lib/scrapbox/api"
 import { Post } from "../../../lib/scrapbox/types"
 import { PageType, LineNodeType } from "@progfay/scrapbox-parser"
 import Link from "next/link"
-import { scrapboxProject } from "../../../lib/config"
+import { SCRAPBOX_PROJECT } from "../../../lib/config"
 import { Header } from "../../components/header"
 import dayjs from "dayjs"
 import { formatString } from "../../constants"
@@ -65,7 +65,7 @@ const RenderPost: NextPage<Props> = ({ post }) => {
                         <br />
                         <a
                             className="text-blue-500"
-                            href={`https://scrapbox.io/${scrapboxProject}/${post.title}`}
+                            href={`https://scrapbox.io/${SCRAPBOX_PROJECT}/${post.title}`}
                             target="_blank"
                         >
                             {post.title}
@@ -150,7 +150,7 @@ export const nodeRender = (node: LineNodeType, key: string | number) => {
                     return (
                         <img
                             className="icon"
-                            src={`https://scrapbox.io/api/pages/${scrapboxProject}/${encodeURIComponent(node.path)}/icon`}
+                            src={`https://scrapbox.io/api/pages/${SCRAPBOX_PROJECT}/${encodeURIComponent(node.path)}/icon`}
                             key={key}
                         />
                     )
