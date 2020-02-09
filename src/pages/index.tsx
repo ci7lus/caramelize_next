@@ -69,11 +69,11 @@ const Index: NextPage<Props> = ({ posts, page }) => {
                                     </div>
                                     <p className="text-gray-200 truncate text-sm">{post.description}</p>
                                     <p className="text-gray-200 pt-2">
-                                        <span className="pr-2">
+                                        <span className="pr-2 icon">
                                             <FontAwesomeIcon icon={faClock} />
                                         </span>
                                         {dayjs(post.createdAt).format(formatString)}
-                                        <span className="px-2">
+                                        <span className="px-2 icon">
                                             <FontAwesomeIcon icon={faHistory} />
                                         </span>
                                         {dayjs(post.updatedAt).format(formatString)}
