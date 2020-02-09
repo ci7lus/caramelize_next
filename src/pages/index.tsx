@@ -12,7 +12,7 @@ import { faClock } from "@fortawesome/free-solid-svg-icons/faClock"
 import { faHistory } from "@fortawesome/free-solid-svg-icons/faHistory"
 
 export const unstable_getStaticProps = async () => {
-    let page = 0
+    const page = 0
     const posts = await getPosts(scrapboxBlogTag)
 
     return {
@@ -30,6 +30,9 @@ type Props = {
 }
 
 const Index: NextPage<Props> = ({ posts, page }) => {
+    if (posts === null) {
+        return <ErrorPage statusCode={404} />
+    }
     return (
         <>
             <Header />
