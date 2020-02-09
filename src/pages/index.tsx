@@ -67,7 +67,7 @@ const Index: NextPage<Props> = ({ posts, page }) => {
                                             <a>{post.title}</a>
                                         </Link>
                                     </div>
-                                    <p className="text-gray-200 truncate text-sm">{post.description}</p>
+                                    <p className="text-gray-200 break-words text-sm">{post.description}…</p>
                                     <p className="text-gray-200 pt-2">
                                         <span className="pr-2 icon">
                                             <FontAwesomeIcon icon={faClock} />

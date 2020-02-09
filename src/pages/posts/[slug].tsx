@@ -39,7 +39,7 @@ const RenderPost: NextPage<Props> = ({ post }) => {
                     <span>posted at: {dayjs(post.createdAt).format(formatString)}, </span>
                     <span>updated at: {dayjs(post.updatedAt).format(formatString)}</span>
                 </p>
-                <div className="content leading-relaxed">{contentRender(post.content)}</div>
+                <div className="content leading-relaxed break-words">{contentRender(post.content)}</div>
                 <div className="flex items-center justify-center py-4">
                     <p className="mr-4">Author:</p>
                     <img className="w-10 h-10 mr-4 bg-gray-600 rounded" src={post.user.photo} />
