@@ -1,10 +1,10 @@
 import React from "react"
 import { NextPage } from "next"
-import { getPost } from "../../../lib/scrapbox/api"
+import { getPost, getPosts } from "../../../lib/scrapbox/api"
 import { Post } from "../../../lib/scrapbox/types"
 import { PageType, LineNodeType } from "@progfay/scrapbox-parser"
 import Link from "next/link"
-import { SCRAPBOX_PROJECT } from "../../../lib/config"
+import { SCRAPBOX_PROJECT, SCRAPBOX_BLOG_TAG } from "../../../lib/config"
 import { Header } from "../../components/header"
 import dayjs from "dayjs"
 import { formatString } from "../../constants"
@@ -12,16 +12,6 @@ import ErrorPage from "next/error"
 
 export const unstable_getStaticProps = async ({ params: { slug } }: { params: { slug: string } }) => {
     const post = await getPost(slug)
-
-    if (post === null) {
-        return {
-            props: {
-                post,
-            },
-            revalidate: 5,
-        }
-    }
-
     return {
         props: {
             post,
@@ -35,7 +25,7 @@ type Props = {
 }
 
 const RenderPost: NextPage<Props> = ({ post }) => {
-    if (post === null) {
+    if (!post) {
         return <ErrorPage statusCode={404} />
     }
     return (

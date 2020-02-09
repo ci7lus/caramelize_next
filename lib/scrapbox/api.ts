@@ -19,8 +19,11 @@ export const getPageMeta = async (projectName: string, pageName: string) => {
             .digest("hex")
         cachePath = `${CACHE_PATH}/${hash}`
         try {
-            const body = await readFile(cachePath)
-            return JSON.parse(body.toString()) as ScrapboxPage
+            const statOf = await stat(cachePath)
+            if (1 <= moment(statOf.birthtime).diff(1, "days")) {
+                const body = await readFile(cachePath)
+                return JSON.parse(body.toString()) as ScrapboxPage
+            }
         } catch (error) {}
     }
     const res = await fetch(url)

@@ -1,0 +1,18 @@
+{
+    "build": {
+        "env": {
+            "SCRAPBOX_PROJECT": "@caramelize-scrapbox-project",
+            "SCRAPBOX_BLOG_TAG": "@caramelize-scrapbox-blog-tag",
+            "SITE_NAME": "@caramelize-site-name",
+            "SITE_AUTHOR_TWITTER_ID": "@caramelize-author-twitter-id",
+            "ENABLE_CACHE": "@caramelize-enable-cache"
+        }
+    },
+    "env": {
+        "SCRAPBOX_PROJECT": "@caramelize-scrapbox-project",
+        "SCRAPBOX_BLOG_TAG": "@caramelize-scrapbox-blog-tag",
+        "SITE_NAME": "@caramelize-site-name",
+        "SITE_AUTHOR_TWITTER_ID": "@caramelize-author-twitter-id",
+        "ENABLE_CACHE": "@caramelize-enable-cache"
+    }
+}

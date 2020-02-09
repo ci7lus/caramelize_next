@@ -30,7 +30,7 @@ type Props = {
 }
 
 const Index: NextPage<Props> = ({ posts, page }) => {
-    if (posts === null) {
+    if (!posts) {
         return <ErrorPage statusCode={404} />
     }
     return (

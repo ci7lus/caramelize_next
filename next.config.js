@@ -1,4 +1,5 @@
 module.exports = {
+    target: "experimental-serverless-trace",
     env: {
         SCRAPBOX_PROJECT: process.env.SCRAPBOX_PROJECT,
         SCRAPBOX_BLOG_TAG: process.env.SCRAPBOX_BLOG_TAG,
